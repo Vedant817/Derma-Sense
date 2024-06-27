@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable, library_private_types_in_public_api
+
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:path/path.dart';
@@ -43,7 +45,7 @@ class _HomePageState extends State<HomePage> {
       await _initializeControllerFuture;
 
       final directory = await getApplicationDocumentsDirectory();
-      final path = join(directory.path, '${DateTime.now()}.png');
+      final path = join(directory.path, '${DateTime.now()}.png'); /// WIll use later
 
       final image = await _controller.takePicture();
       setState(() {
@@ -89,12 +91,12 @@ class _HomePageState extends State<HomePage> {
       var response = await request.send();
 
       if (response.statusCode == 200) {
-        print('Image uploaded successfully');
+        // print('Image uploaded successfully');
       } else {
-        print('Image upload failed');
+        // print('Image upload failed');
       }
     } catch (e) {
-      print('Error uploading image: $e');
+      // print('Error uploading image: $e');
     }
   }
 
@@ -152,23 +154,36 @@ class _HomePageState extends State<HomePage> {
                   if (!_isPhotoClicked)
                     Positioned(
                       bottom: 16,
-                      left: MediaQuery.of(context).size.width / 2 - 70,
-                      child: Row(
-                        children: [
-                          FloatingActionButton(
-                            onPressed: _takePicture,
-                            backgroundColor: Theme.of(context).colorScheme.primary,
-                            child: const Icon(Icons.camera_alt),
-                          ),
-                          const SizedBox(width: 16),
-                          FloatingActionButton(
-                            onPressed: _toggleFlash,
-                            backgroundColor: Theme.of(context).colorScheme.primary,
-                            child: Icon(
-                              _isFlashOn ? Icons.flash_on : Icons.flash_off,
+                      left: 0,
+                      right: 0,
+                      // width: double.infinity, /// Avoid using
+                      child: Center(
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            FloatingActionButton(
+                              onPressed: _takePicture,
+                              backgroundColor: Theme.of(context).colorScheme.primary,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12.0),
+                                side: const BorderSide(color: Color.fromRGBO(96, 160, 255, 1), width: 3.0)
+                              ),
+                              child: const Icon(Icons.camera_alt),
                             ),
-                          ),
-                        ],
+                            const SizedBox(width: 16),
+                            FloatingActionButton(
+                              onPressed: _toggleFlash,
+                              backgroundColor: Theme.of(context).colorScheme.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                                side: const BorderSide(color: Color.fromRGBO(96, 160, 255, 1), width: 3.0)
+                              ),
+                              child: Icon(
+                                _isFlashOn ? Icons.flash_on : Icons.flash_off,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                 ],
@@ -182,10 +197,11 @@ class _HomePageState extends State<HomePage> {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: _pickImageFromGallery,
-                      icon: const Icon(Icons.photo_library, color: Color.fromRGBO(96, 160, 255, 1),),
-                      label: Text('Image', style: Theme.of(context).textTheme.bodyMedium,),
+                      icon: const Icon(Icons.photo_library, color: Color.fromRGBO(219, 233, 254, 1),),
+                      label: Text('Image', style: Theme.of(context).textTheme.bodyLarge,),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        // backgroundColor: Theme.of(context).colorScheme.primary,
+                          backgroundColor: const Color.fromRGBO(96, 160, 255, 1)
                       ),
                     ),
                   ),
@@ -193,10 +209,11 @@ class _HomePageState extends State<HomePage> {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: _isPhotoClicked ? _uploadImage : null,
-                      icon: const Icon(Icons.upload_file, color: Color.fromRGBO(96, 160, 255, 1),),
-                      label: Text('Upload', style: Theme.of(context).textTheme.bodyMedium,),
+                      icon: const Icon(Icons.upload_file, color: Color.fromRGBO(219, 233, 254, 1),),
+                      label: Text('Upload', style: Theme.of(context).textTheme.bodyLarge,),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).colorScheme.primary,
+                        // backgroundColor: Theme.of(context).colorScheme.primary,
+                        backgroundColor: const Color.fromRGBO(96, 160, 255, 1)
                       ),
                     ),
                   ),
@@ -209,7 +226,7 @@ class _HomePageState extends State<HomePage> {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 14,
-                color: Colors.black54,
+                color: Color.fromRGBO(96, 160, 255, 1),
               ),
             ),
             const SizedBox(height: 20),
