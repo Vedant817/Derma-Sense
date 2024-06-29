@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'package:camera/camera.dart';
+import 'package:derma_sense/response_page.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,9 @@ class _HomePageState extends State<HomePage> {
       await _initializeControllerFuture;
 
       final directory = await getApplicationDocumentsDirectory();
-      final path = join(directory.path, '${DateTime.now()}.png'); /// WIll use later
+      final path = join(directory.path, '${DateTime.now()}.png');
+
+      /// WIll use later
 
       final image = await _controller.takePicture();
       setState(() {
@@ -76,29 +79,31 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  Future<void> _uploadImage() async {
-    if (_imageFile == null) return;
-
-    try {
-      var request = http.MultipartRequest(
-        'POST',
-        Uri.parse('YOUR_API_ENDPOINT_HERE'),
-      );
-      request.files.add(await http.MultipartFile.fromPath(
-        'file',
-        _imageFile!.path,
-      ));
-      var response = await request.send();
-
-      if (response.statusCode == 200) {
-        // print('Image uploaded successfully');
-      } else {
-        // print('Image upload failed');
-      }
-    } catch (e) {
-      // print('Error uploading image: $e');
-    }
-  }
+  // Future<void> _uploadImage() async {
+  //   if (_imageFile == null) return;
+  //
+  //   // Navigator.push(context, MaterialPageRoute(builder: (context) => const ResponsePage()));
+  //
+  //   // try {
+  //   //   var request = http.MultipartRequest(
+  //   //     'POST',
+  //   //     Uri.parse('YOUR_API_ENDPOINT_HERE'),
+  //   //   );
+  //   //   request.files.add(await http.MultipartFile.fromPath(
+  //   //     'file',
+  //   //     _imageFile!.path,
+  //   //   ));
+  //   //   var response = await request.send();
+  //   //
+  //   //   if (response.statusCode == 200) {
+  //   //     // print('Image uploaded successfully');
+  //   //   } else {
+  //   //     // print('Image upload failed');
+  //   //   }
+  //   // } catch (e) {
+  //   //   // print('Error uploading image: $e');
+  //   // }
+  // }
 
   Future<bool> _onWillPop() async {
     if (_isPhotoClicked) {
@@ -147,7 +152,8 @@ class _HomePageState extends State<HomePage> {
                             child: CameraPreview(_controller),
                           );
                         } else {
-                          return const Center(child: CircularProgressIndicator());
+                          return const Center(
+                              child: CircularProgressIndicator());
                         }
                       },
                     ),
@@ -163,21 +169,25 @@ class _HomePageState extends State<HomePage> {
                           children: [
                             FloatingActionButton(
                               onPressed: _takePicture,
-                              backgroundColor: Theme.of(context).colorScheme.primary,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12.0),
-                                side: const BorderSide(color: Color.fromRGBO(96, 160, 255, 1), width: 3.0)
-                              ),
+                                  side: const BorderSide(
+                                      color: Color.fromRGBO(96, 160, 255, 1),
+                                      width: 3.0)),
                               child: const Icon(Icons.camera_alt),
                             ),
                             const SizedBox(width: 16),
                             FloatingActionButton(
                               onPressed: _toggleFlash,
-                              backgroundColor: Theme.of(context).colorScheme.primary,
+                              backgroundColor:
+                                  Theme.of(context).colorScheme.primary,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0),
-                                side: const BorderSide(color: Color.fromRGBO(96, 160, 255, 1), width: 3.0)
-                              ),
+                                  borderRadius: BorderRadius.circular(12.0),
+                                  side: const BorderSide(
+                                      color: Color.fromRGBO(96, 160, 255, 1),
+                                      width: 3.0)),
                               child: Icon(
                                 _isFlashOn ? Icons.flash_on : Icons.flash_off,
                               ),
@@ -197,24 +207,58 @@ class _HomePageState extends State<HomePage> {
                   Expanded(
                     child: ElevatedButton.icon(
                       onPressed: _pickImageFromGallery,
-                      icon: const Icon(Icons.photo_library, color: Color.fromRGBO(219, 233, 254, 1),),
-                      label: Text('Image', style: Theme.of(context).textTheme.bodyLarge,),
-                      style: ElevatedButton.styleFrom(
-                        // backgroundColor: Theme.of(context).colorScheme.primary,
-                          backgroundColor: const Color.fromRGBO(96, 160, 255, 1)
+                      icon: const Icon(
+                        Icons.photo_library,
+                        color: Color.fromRGBO(219, 233, 254, 1),
                       ),
+                      label: Text(
+                        'Image',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          // backgroundColor: Theme.of(context).colorScheme.primary,
+                          backgroundColor:
+                              const Color.fromRGBO(96, 160, 255, 1)),
                     ),
                   ),
                   const SizedBox(width: 16),
                   Expanded(
                     child: ElevatedButton.icon(
-                      onPressed: _isPhotoClicked ? _uploadImage : null,
-                      icon: const Icon(Icons.upload_file, color: Color.fromRGBO(219, 233, 254, 1),),
-                      label: Text('Upload', style: Theme.of(context).textTheme.bodyLarge,),
-                      style: ElevatedButton.styleFrom(
-                        // backgroundColor: Theme.of(context).colorScheme.primary,
-                        backgroundColor: const Color.fromRGBO(96, 160, 255, 1)
+                      // onPressed: _isPhotoClicked ? _uploadImage : null,
+                      onPressed: () {
+                        _isPhotoClicked
+                            ? Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ResponsePage(
+                                      imageFile: _imageFile!),
+                                ))
+                            : ScaffoldMessenger.of(context)
+                                .showSnackBar(const SnackBar(
+                                    backgroundColor: Colors.red,
+                                    content: Center(
+                                      child: SizedBox(
+                                          height: 30.0,
+                                          child: Text(
+                                              'Please Provide the image.',
+                                              style: TextStyle(
+                                                  fontSize: 20.0,
+                                                  color: Color.fromRGBO(
+                                                      219, 233, 254, 1)))),
+                                    )));
+                      },
+                      icon: const Icon(
+                        Icons.upload_file,
+                        color: Color.fromRGBO(219, 233, 254, 1),
                       ),
+                      label: Text(
+                        'Upload',
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      style: ElevatedButton.styleFrom(
+                          // backgroundColor: Theme.of(context).colorScheme.primary,
+                          backgroundColor:
+                              const Color.fromRGBO(96, 160, 255, 1)),
                     ),
                   ),
                 ],
