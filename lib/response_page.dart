@@ -55,27 +55,45 @@ class ResponsePage extends StatelessWidget {
                           onTap: () {
                             Navigator.pop(context, false);
                           },
-                          child: const Icon(
-                            Icons.home,
-                            size: 50,
-                            color: Colors.blue,
+                          child: Container(
+                            height: 70,
+                            width: 70,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Color.fromRGBO(96, 160, 255, 1),
+                            ),
+                            child: const Icon(
+                              Icons.home,
+                              size: 50,
+                              color: Color.fromRGBO(219, 233, 245, 1),
+                            ),
                           ),
                         ),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 8),
                         const Text(
                           'Our Analysis Indicates signs of',
                           style: TextStyle(
                             fontSize: 14,
-                            color: Colors.black54,
+                            fontWeight: FontWeight.w600,
+                            color: Color.fromRGBO(96, 160, 255, 1),
                           ),
                         ),
                         const SizedBox(height: 7),
-                        const Text(
-                          'Diagnosis',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue,
+                        Container(
+                          height: 40,
+                          width: double.maxFinite,
+                          decoration: BoxDecoration(
+                            color: const Color.fromRGBO(96, 160, 255, 1),
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          alignment: Alignment.center,
+                          child: const Text(
+                            'Diagnosis',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                         const SizedBox(height: 7),
@@ -83,37 +101,42 @@ class ResponsePage extends StatelessWidget {
                           padding: const EdgeInsetsDirectional.symmetric(
                               horizontal: 12),
                           decoration: BoxDecoration(
-                            border: Border.all(color: Colors.blue),
-                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                                color: const Color.fromRGBO(96, 160, 255, 1),
+                                width: 3.0),
+                            borderRadius: BorderRadius.circular(25),
                           ),
-                          child: const Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Please remember, this is only a preliminary assessment and not a definitive diagnosis.',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.black54,
+                          child: const Padding(
+                            padding: EdgeInsets.symmetric(vertical: 10.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  'Please remember, this is only a preliminary assessment and not a definitive diagnosis.',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Color.fromRGBO(96, 160, 255, 1),
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                'Next Steps for Your Health:',
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black87,
+                                SizedBox(height: 7),
+                                Text(
+                                  'Next Steps for Your Health:',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color.fromRGBO(96, 160, 255, 1),
+                                  ),
                                 ),
-                              ),
-                              SizedBox(height: 10),
-                              Text(
-                                'NextSteps',
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.black54,
+                                SizedBox(height: 10),
+                                Text(
+                                  'We Strongly recommend that you consult with a healthcare professional to get a thorough and accurate diagnosis',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Color.fromRGBO(96, 160, 255, 1),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ],
