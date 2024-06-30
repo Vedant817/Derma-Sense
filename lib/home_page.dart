@@ -1,5 +1,3 @@
-// ignore_for_file: unused_local_variable, library_private_types_in_public_api
-
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:derma_sense/response_page.dart';
@@ -7,7 +5,8 @@ import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:http/http.dart' as http;
+import 'package:derma_sense/image__provider.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   final CameraDescription camera;
@@ -79,37 +78,12 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
-  // Future<void> _uploadImage() async {
-  //   if (_imageFile == null) return;
-  //
-  //   // Navigator.push(context, MaterialPageRoute(builder: (context) => const ResponsePage()));
-  //
-  //   // try {
-  //   //   var request = http.MultipartRequest(
-  //   //     'POST',
-  //   //     Uri.parse('YOUR_API_ENDPOINT_HERE'),
-  //   //   );
-  //   //   request.files.add(await http.MultipartFile.fromPath(
-  //   //     'file',
-  //   //     _imageFile!.path,
-  //   //   ));
-  //   //   var response = await request.send();
-  //   //
-  //   //   if (response.statusCode == 200) {
-  //   //     // print('Image uploaded successfully');
-  //   //   } else {
-  //   //     // print('Image upload failed');
-  //   //   }
-  //   // } catch (e) {
-  //   //   // print('Error uploading image: $e');
-  //   // }
-  // }
-
   Future<bool> _onWillPop() async {
     if (_isPhotoClicked) {
       setState(() {
         _imageFile = null;
         _isPhotoClicked = false;
+        Provider.of<ImageProviderCustom>(context as BuildContext, listen: false).removeImage();
       });
       return false;
     } else {
@@ -224,28 +198,30 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(width: 16),
                   Expanded(
                     child: ElevatedButton.icon(
-                      // onPressed: _isPhotoClicked ? _uploadImage : null,
                       onPressed: () {
-                        _isPhotoClicked
-                            ? Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const ResponsePage(
-                                      imageFile: _imageFile!),
-                                ))
-                            : ScaffoldMessenger.of(context)
-                                .showSnackBar(const SnackBar(
-                                    backgroundColor: Colors.red,
-                                    content: Center(
-                                      child: SizedBox(
-                                          height: 30.0,
-                                          child: Text(
-                                              'Please Provide the image.',
-                                              style: TextStyle(
-                                                  fontSize: 20.0,
-                                                  color: Color.fromRGBO(
-                                                      219, 233, 254, 1)))),
-                                    )));
+                        if (_isPhotoClicked && _imageFile != null) {
+                          Provider.of<ImageProviderCustom>(context,
+                                  listen: false)
+                              .saveImage(_imageFile!);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const ResponsePage(),
+                              ));
+                        } else {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(const SnackBar(
+                                  backgroundColor: Colors.red,
+                                  content: Center(
+                                    child: SizedBox(
+                                        height: 30.0,
+                                        child: Text('Please Provide the image.',
+                                            style: TextStyle(
+                                                fontSize: 20.0,
+                                                color: Color.fromRGBO(
+                                                    219, 233, 254, 1)))),
+                                  )));
+                        }
                       },
                       icon: const Icon(
                         Icons.upload_file,
