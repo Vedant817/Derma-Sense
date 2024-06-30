@@ -83,8 +83,9 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         _imageFile = null;
         _isPhotoClicked = false;
-        Provider.of<ImageProviderCustom>(context as BuildContext, listen: false).removeImage();
       });
+      Provider.of<ImageProviderCustom>(context as BuildContext, listen: false)
+          .removeImage();
       return false;
     } else {
       return true;

@@ -20,89 +20,104 @@ class ResponsePage extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Expanded(
-            flex: 2,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(20),
-              child: Image.file(
-                File(imageFile!.path),
-                width: double.infinity,
-                height: double.infinity,
-                fit: BoxFit.cover,
+            flex: 4,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(20),
+                child: Image.file(
+                  File(imageFile!.path),
+                  width: double.infinity,
+                  height: double.infinity,
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           ),
-          SingleChildScrollView(
-            child: Expanded(
-              flex: 1,
+          Expanded(
+            flex: 3,
+            child: Material(
+              elevation: 4,
               child: Container(
-                padding: const EdgeInsets.only(left: 16, right: 16, top: 10),
+                padding: const EdgeInsets.only(
+                    left: 16, right: 16, top: 10, bottom: 20),
                 decoration: BoxDecoration(
                   color: const Color.fromRGBO(219, 233, 254, 1),
                   borderRadius: BorderRadius.circular(-20),
                 ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
+                child: ListView(
+                  scrollDirection: Axis.vertical,
                   children: [
-                    const Icon(
-                      Icons.home,
-                      size: 50,
-                      color: Colors.blue,
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      'Our Analysis Indicates signs of',
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black54,
-                      ),
-                    ),
-                    const SizedBox(height: 7),
-                    const Text(
-                      'Diagnosis',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
-                    ),
-                    const SizedBox(height: 7),
-                    Container(
-                      padding:
-                          const EdgeInsetsDirectional.symmetric(horizontal: 12),
-                      decoration: BoxDecoration(
-                        border: Border.all(color: Colors.blue),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: const Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Please remember, this is only a preliminary assessment and not a definitive diagnosis.',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black54,
-                            ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.pop(context, false);
+                          },
+                          child: const Icon(
+                            Icons.home,
+                            size: 50,
+                            color: Colors.blue,
                           ),
-                          SizedBox(height: 8),
-                          Text(
-                            'Next Steps for Your Health:',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.black87,
-                            ),
+                        ),
+                        const SizedBox(height: 10),
+                        const Text(
+                          'Our Analysis Indicates signs of',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.black54,
                           ),
-                          SizedBox(height: 10),
-                          Text(
-                            'NextSteps',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.black54,
-                            ),
+                        ),
+                        const SizedBox(height: 7),
+                        const Text(
+                          'Diagnosis',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue,
                           ),
-                        ],
-                      ),
-                    ),
+                        ),
+                        const SizedBox(height: 7),
+                        Container(
+                          padding: const EdgeInsetsDirectional.symmetric(
+                              horizontal: 12),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.blue),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Please remember, this is only a preliminary assessment and not a definitive diagnosis.',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                              SizedBox(height: 8),
+                              Text(
+                                'Next Steps for Your Health:',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              Text(
+                                'NextSteps',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black54,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
                   ],
                 ),
               ),
