@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:provider/provider.dart';
 import 'package:derma_sense/image__provider.dart';
 
 class ResponsePage extends StatelessWidget {
-  const ResponsePage({super.key});
+  final response;
+  const ResponsePage({super.key, required this.response});
 
   @override
   Widget build(BuildContext context) {
     final imageFile = context.watch<ImageProviderCustom>().imageFile;
+
+    final _response = response['predicted_class'];
 
     return Scaffold(
       appBar: AppBar(
@@ -87,9 +89,9 @@ class ResponsePage extends StatelessWidget {
                             borderRadius: BorderRadius.circular(20),
                           ),
                           alignment: Alignment.center,
-                          child: const Text(
-                            'Diagnosis',
-                            style: TextStyle(
+                          child: Text(
+                            _response,
+                            style: const TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,

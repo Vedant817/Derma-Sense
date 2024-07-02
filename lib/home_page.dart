@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:derma_sense/response_page.dart';
@@ -7,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:derma_sense/image__provider.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class HomePage extends StatefulWidget {
   final CameraDescription camera;
@@ -92,6 +95,32 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  void _showErrorDialog(BuildContext context, String message) {
+    showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (context) => AlertDialog(
+          backgroundColor: const Color.fromRGBO(219, 233, 254, 1),
+              title: const Text('Error', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),),
+              content: Text(message, style: const TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w300
+              ),),
+              actions: [
+                TextButton(
+                    onPressed: () {
+                      // Navigator.pop(context);
+                      // Navigator.pop(context);
+                      Navigator.of(context).popUntil((route) => route.isFirst);
+                    },
+                    style: TextButton.styleFrom(
+                      backgroundColor: const Color.fromRGBO(255, 204, 204, 1)
+                    ),
+                    child: const Text('Close', style: TextStyle(color: Colors.red),)),
+              ],
+            ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -108,13 +137,16 @@ class _HomePageState extends State<HomePage> {
               child: Stack(
                 children: [
                   if (_imageFile != null)
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(20),
-                      child: Image.file(
-                        File(_imageFile!.path),
-                        width: double.infinity,
-                        height: double.infinity,
-                        fit: BoxFit.cover,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(20),
+                        child: Image.file(
+                          File(_imageFile!.path),
+                          width: double.infinity,
+                          height: double.infinity,
+                          fit: BoxFit.cover,
+                        ),
                       ),
                     )
                   else
@@ -199,29 +231,68 @@ class _HomePageState extends State<HomePage> {
                   const SizedBox(width: 16),
                   Expanded(
                     child: ElevatedButton.icon(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_isPhotoClicked && _imageFile != null) {
-                          Provider.of<ImageProviderCustom>(context,
-                                  listen: false)
-                              .saveImage(_imageFile!);
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ResponsePage(),
-                              ));
+                          try {
+                            final apiUrl = dotenv.env['API_URL'];
+                            final uri = Uri.parse(apiUrl!);
+                            final request = http.MultipartRequest('POST', uri);
+
+                            request.headers['Content-Type'] =
+                                'multipart/form-data';
+                            request.files.add(await http.MultipartFile.fromPath(
+                              'image', // This is the field name on the server
+                              _imageFile!.path,
+                              // filename: _imageFile!.path.split('/').last,
+                            ));
+
+                            final response = await request.send();
+                            final responseBody =
+                                await response.stream.bytesToString();
+
+                            // Check the response status
+                            if (response.statusCode == 200) {
+                              final decodedResponse = json.decode(responseBody);
+                              // Image upload successful, save the image locally
+                              Provider.of<ImageProviderCustom>(context,
+                                      listen: false)
+                                  .saveImage(_imageFile!);
+
+                              // Navigate to the ResponsePage
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ResponsePage(
+                                    response: decodedResponse,
+                                  ),
+                                ),
+                              );
+                            } else {
+                              _showErrorDialog(context, 'Connection Error.\nTry Again Later');
+                            }
+                          } catch (e) {
+                            // Handle any exceptions during the upload process
+                            _showErrorDialog(context, e.toString());
+                          }
                         } else {
-                          ScaffoldMessenger.of(context)
-                              .showSnackBar(const SnackBar(
-                                  backgroundColor: Colors.red,
-                                  content: Center(
-                                    child: SizedBox(
-                                        height: 30.0,
-                                        child: Text('Please Provide the image.',
-                                            style: TextStyle(
-                                                fontSize: 20.0,
-                                                color: Color.fromRGBO(
-                                                    219, 233, 254, 1)))),
-                                  )));
+                          // Show a message if no image is provided
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              backgroundColor: Colors.red,
+                              content: Center(
+                                child: SizedBox(
+                                  height: 30.0,
+                                  child: Text(
+                                    'Please provide the image.',
+                                    style: TextStyle(
+                                      fontSize: 20.0,
+                                      color: Color.fromRGBO(219, 233, 254, 1),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
                         }
                       },
                       icon: const Icon(
