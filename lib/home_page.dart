@@ -234,14 +234,14 @@ class _HomePageState extends State<HomePage> {
                       onPressed: () async {
                         if (_isPhotoClicked && _imageFile != null) {
                           try {
-                            final apiUrl = dotenv.env['API_URL'];
-                            final uri = Uri.parse(apiUrl!);
+                            const apiUrl = 'https://4e98-2a09-bac5-3f14-a8c-00-10d-20.ngrok-free.app/predict';
+                            final uri = Uri.parse(apiUrl);
                             final request = http.MultipartRequest('POST', uri);
 
                             request.headers['Content-Type'] =
                                 'multipart/form-data';
                             request.files.add(await http.MultipartFile.fromPath(
-                              'image', // This is the field name on the server
+                              'file', // This is the field name on the server
                               _imageFile!.path,
                               // filename: _imageFile!.path.split('/').last,
                             ));
@@ -263,7 +263,7 @@ class _HomePageState extends State<HomePage> {
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => ResponsePage(
-                                    response: decodedResponse,
+                                    response: decodedResponse['prediction'],
                                   ),
                                 ),
                               );

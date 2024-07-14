@@ -11,7 +11,7 @@ class ResponsePage extends StatelessWidget {
   Widget build(BuildContext context) {
     final imageFile = context.watch<ImageProviderCustom>().imageFile;
 
-    final _response = response['predicted_class'];
+    final _response = response;
 
     return Scaffold(
       appBar: AppBar(
