@@ -2,16 +2,36 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:provider/provider.dart';
 import 'package:derma_sense/image__provider.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 
 class ResponsePage extends StatelessWidget {
-  final response;
+  final String
+      response; // Assuming response is a String representing the diagnosis
   const ResponsePage({super.key, required this.response});
 
   @override
   Widget build(BuildContext context) {
     final imageFile = context.watch<ImageProviderCustom>().imageFile;
 
-    final _response = response;
+    final Map<String, String> diseaseRecommendations = {
+      'Actinic keratoses':
+          'Seek evaluation from a dermatologist as actinic keratoses can be precursors to skin cancer. Treatment options may include cryotherapy, topical medications, or photodynamic therapy.',
+      'Basal cell carcinoma':
+          'Consult with a dermatologist promptly. Basal cell carcinoma is a common type of skin cancer that rarely spreads but needs treatment. Options include surgical excision, Mohs surgery, or topical treatments.',
+      'Benign keratosis-like lesions':
+          'These lesions are usually non-cancerous. However, it\'s advisable to have them checked by a dermatologist to rule out any possibility of skin cancer. Treatments may include cryotherapy or laser removal if needed.',
+      'Dermatofibroma':
+          'Dermatofibromas are generally harmless. If it causes discomfort or cosmetic concerns, consult with a dermatologist about possible removal options.',
+      'Melanoma':
+          'Melanoma is a serious form of skin cancer. Immediate consultation with a dermatologist is critical for early detection and treatment, which may include surgical removal, immunotherapy, or targeted therapy.',
+      'Melanocytic nevi':
+          'These are common moles, usually benign. Regular self-examination and annual dermatological check-ups are advised to monitor any changes in size, shape, or color.',
+      'Vascular lesions':
+          'Vascular lesions are usually benign. Consult a dermatologist if you notice any changes or if the lesion causes symptoms. Treatments can include laser therapy or sclerotherapy.',
+    };
+
+    final String recommendation = diseaseRecommendations[response] ??
+        'Please consult a certified dermatologist for a thorough evaluation and personalized advice.';
 
     return Scaffold(
       appBar: AppBar(
@@ -53,25 +73,6 @@ class ResponsePage extends StatelessWidget {
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.pop(context, false);
-                          },
-                          child: Container(
-                            height: 70,
-                            width: 70,
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: Color.fromRGBO(96, 160, 255, 1),
-                            ),
-                            child: const Icon(
-                              Icons.home,
-                              size: 50,
-                              color: Color.fromRGBO(219, 233, 245, 1),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 8),
                         const Text(
                           'Our Analysis Indicates signs of',
                           style: TextStyle(
@@ -82,20 +83,21 @@ class ResponsePage extends StatelessWidget {
                         ),
                         const SizedBox(height: 7),
                         Container(
-                          height: 40,
-                          width: double.maxFinite,
+                          padding: const EdgeInsets.symmetric(horizontal: 12),
                           decoration: BoxDecoration(
                             color: const Color.fromRGBO(96, 160, 255, 1),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           alignment: Alignment.center,
-                          child: Text(
-                            _response,
+                          child: AutoSizeText(
+                            response,
                             style: const TextStyle(
                               fontSize: 24,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
+                            maxLines: 1,
+                            minFontSize: 16,
                           ),
                         ),
                         const SizedBox(height: 7),
@@ -104,24 +106,17 @@ class ResponsePage extends StatelessWidget {
                               horizontal: 12),
                           decoration: BoxDecoration(
                             border: Border.all(
-                                color: const Color.fromRGBO(96, 160, 255, 1),
-                                width: 3.0),
+                              color: const Color.fromRGBO(96, 160, 255, 1),
+                              width: 3.0,
+                            ),
                             borderRadius: BorderRadius.circular(25),
                           ),
-                          child: const Padding(
-                            padding: EdgeInsets.symmetric(vertical: 10.0),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 10.0),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  'Please remember, this is only a preliminary assessment and not a definitive diagnosis.',
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Color.fromRGBO(96, 160, 255, 1),
-                                  ),
-                                ),
-                                SizedBox(height: 7),
-                                Text(
+                                const Text(
                                   'Next Steps for Your Health:',
                                   style: TextStyle(
                                     fontSize: 18,
@@ -129,11 +124,11 @@ class ResponsePage extends StatelessWidget {
                                     color: Color.fromRGBO(96, 160, 255, 1),
                                   ),
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Text(
-                                  'We Strongly recommend that you consult with a healthcare professional to get a thorough and accurate diagnosis',
-                                  style: TextStyle(
-                                    fontSize: 12,
+                                  recommendation,
+                                  style: const TextStyle(
+                                    fontSize: 13,
                                     color: Color.fromRGBO(96, 160, 255, 1),
                                   ),
                                 ),

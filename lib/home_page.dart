@@ -100,12 +100,17 @@ class _HomePageState extends State<HomePage> {
         barrierDismissible: false,
         context: context,
         builder: (context) => AlertDialog(
-          backgroundColor: const Color.fromRGBO(219, 233, 254, 1),
-              title: const Text('Error', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),),
-              content: Text(message, style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w300
-              ),),
+              backgroundColor: const Color.fromRGBO(219, 233, 254, 1),
+              title: const Text(
+                'Error',
+                style:
+                    TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
+              ),
+              content: Text(
+                message,
+                style:
+                    const TextStyle(fontSize: 20, fontWeight: FontWeight.w300),
+              ),
               actions: [
                 TextButton(
                     onPressed: () {
@@ -114,9 +119,12 @@ class _HomePageState extends State<HomePage> {
                       Navigator.of(context).popUntil((route) => route.isFirst);
                     },
                     style: TextButton.styleFrom(
-                      backgroundColor: const Color.fromRGBO(255, 204, 204, 1)
-                    ),
-                    child: const Text('Close', style: TextStyle(color: Colors.red),)),
+                        backgroundColor:
+                            const Color.fromRGBO(255, 204, 204, 1)),
+                    child: const Text(
+                      'Close',
+                      style: TextStyle(color: Colors.red),
+                    )),
               ],
             ));
   }
@@ -234,7 +242,7 @@ class _HomePageState extends State<HomePage> {
                       onPressed: () async {
                         if (_isPhotoClicked && _imageFile != null) {
                           try {
-                            const apiUrl = 'https://4e98-2a09-bac5-3f14-a8c-00-10d-20.ngrok-free.app/predict';
+                            const apiUrl = 'https://5794-2a09-bac1-36a0-5f70-00-10d-18.ngrok-free.app/predict';
                             final uri = Uri.parse(apiUrl);
                             final request = http.MultipartRequest('POST', uri);
 
@@ -268,7 +276,8 @@ class _HomePageState extends State<HomePage> {
                                 ),
                               );
                             } else {
-                              _showErrorDialog(context, 'Connection Error.\nTry Again Later');
+                              _showErrorDialog(context,
+                                  'Connection Error.\nTry Again Later');
                             }
                           } catch (e) {
                             // Handle any exceptions during the upload process
