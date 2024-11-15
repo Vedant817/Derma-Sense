@@ -1,35 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:camera/camera.dart';
+import 'package:provider/provider.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'home_page.dart';
 import 'no_camera_screen.dart';
-import 'package:provider/provider.dart';
+import 'login_screen.dart';
 import 'package:derma_sense/image__provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
 
-  // Obtain a list of available cameras
   final cameras = await availableCameras();
 
-  // Ensure at least one camera is available
   if (cameras.isEmpty) {
-    // Handle the case where no cameras are available
     runApp(const NoCameraApp());
     return;
   }
 
-  // Select the first camera available
   final firstCamera = cameras.first;
+  final isLoggedIn = await checkLoginStatus();
 
-  // Run the app and pass the selected camera to the HomePage
-  runApp(App(camera: firstCamera));
+  runApp(App(camera: firstCamera, isLoggedIn: isLoggedIn));
+}
+
+Future<bool> checkLoginStatus() async {
+  final prefs = await SharedPreferences.getInstance();
+  final lastLogin = prefs.getInt('lastLoginTime');
+
+  if (lastLogin == null) {
+    return false;
+  }
+
+  final now = DateTime.now().millisecondsSinceEpoch;
+  final difference = now - lastLogin;
+  const twoDaysInMilliseconds = 2 * 24 * 60 * 60 * 1000;
+
+  return difference <= twoDaysInMilliseconds;
 }
 
 class App extends StatelessWidget {
   final CameraDescription camera;
+  final bool isLoggedIn;
 
-  const App({super.key, required this.camera});
+  const App({super.key, required this.camera, required this.isLoggedIn});
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +80,8 @@ class App extends StatelessWidget {
           scaffoldBackgroundColor: const Color.fromRGBO(219, 233, 245, 1),
           useMaterial3: true,
         ),
-        home: HomePage(camera: camera),
+        home:
+            isLoggedIn ? HomePage(camera: camera) : LoginScreen(camera: camera),
       ),
     );
   }
